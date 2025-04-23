@@ -1,134 +1,57 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+// src/main.ts
 
-// Remember to rename these classes and interfaces!
+import { Plugin } from 'obsidian';
+import { emoteDecoratorPlugin } from './editorPlugin';  // Import the emote editor plugin
+import EmoteReplacerSettingsTab from './settings';  // Import settings tab class
 
-interface MyPluginSettings {
-	mySetting: string;
+interface EmoteReplacerSettings {
+    emotes: Record<string, string>;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
-}
+const DEFAULT_SETTINGS: EmoteReplacerSettings = {
+    emotes: {
+        ":peepoHappy:": "https://cdn.7tv.app/emote/01F6RC8C1G0003SBEQ3QZTEE99/4x.avif",
+        ":smile:": "https://cdn.7tv.app/emote/01HFVS0P0G0001DJAN6MH02MTS/4x.avif"
+    }
+};
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class EmoteReplacerPlugin extends Plugin {
+    settings: EmoteReplacerSettings;
 
-	async onload() {
-		await this.loadSettings();
+    async onload() {
+        console.log("🎉 Emote Replacer Plugin loaded");
 
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
+        // Load settings
+        await this.loadSettings();
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status Bar Text');
+        // Register editor extension with a function to access current settings
+        this.registerEditorExtension(emoteDecoratorPlugin(() => this.settings.emotes));
 
-		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: 'open-sample-modal-simple',
-			name: 'Open sample modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
-			}
-		});
-		// This adds an editor command that can perform some operation on the current editor instance
-		this.addCommand({
-			id: 'sample-editor-command',
-			name: 'Sample editor command',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
-				editor.replaceSelection('Sample Editor Command');
-			}
-		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		this.addCommand({
-			id: 'open-sample-modal-complex',
-			name: 'Open sample modal (complex)',
-			checkCallback: (checking: boolean) => {
-				// Conditions to check
-				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
+        // Register markdown postprocessor for Preview mode
+        this.registerMarkdownPostProcessor((el) => {
+            Object.entries(this.settings.emotes).forEach(([keyword, url]) => {
+                el.querySelectorAll('p, li, span, strong, em, h1, h2, h3, h4').forEach(node => {
+                    if (node.innerHTML.includes(keyword)) {
+                        node.innerHTML = node.innerHTML.replaceAll(
+                            keyword,
+                            `<img src="${url}" style="height:1.4em; vertical-align:middle;">`
+                        );
+                    }
+                });
+            });
+        });
 
-					// This command will only show up in Command Palette when the check function returns true
-					return true;
-				}
-			}
-		});
+        // Add settings tab
+        this.addSettingTab(new EmoteReplacerSettingsTab(this.app, this));
+    }
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+    async loadSettings() {
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    }
 
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-	}
-
-	onunload() {
-
-	}
-
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
-
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		const {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
-
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const {containerEl} = this;
-
-		containerEl.empty();
-
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
-				.onChange(async (value) => {
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
-	}
+    async saveSettings() {
+        await this.saveData(this.settings);
+        // Force refresh of editor to show updated emotes
+        this.app.workspace.updateOptions();
+    }
 }
