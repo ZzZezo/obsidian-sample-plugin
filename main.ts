@@ -11,7 +11,7 @@ interface EmoteReplacerSettings {
 const DEFAULT_SETTINGS: EmoteReplacerSettings = {
     emotes: {
         ":peepoHappy:": "https://cdn.7tv.app/emote/01F6RC8C1G0003SBEQ3QZTEE99/4x.avif",
-        ":smile:": "https://cdn.7tv.app/emote/01HFVS0P0G0001DJAN6MH02MTS/4x.avif"
+        ":monkaS:": "https://cdn.7tv.app/emote/01F78CHJ2G0005TDSTZFBDGMK4/4x.avif"
     }
 };
 
