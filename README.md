@@ -37,8 +37,8 @@ Replace text shortcuts like `:peepoHappy:` or `:monkaS:` with custom images or G
 
 | Keyword         | Result                                      |
 |-----------------|---------------------------------------------|
-| `:peepoHappy:`  | ![peepoHappy](https://cdn.7tv.app/emote/01F6RC8C1G0003SBEQ3QZTEE99/2x.avif) |
-| `:monkaS:`      | ![monkaS](https://cdn.7tv.app/emote/01F78CHJ2G0005TDSTZFBDGMK4/2x.avif)     |
+| `:peepoHappy:`  | ![peepoHappy](https://cdn.7tv.app/emote/01F6RC8C1G0003SBEQ3QZTEE99/1x.avif) |
+| `:monkaS:`      | ![peepoHappy](https://cdn.7tv.app/emote/01F78CHJ2G0005TDSTZFBDGMK4/1x.avif) |
 
 ---
 
