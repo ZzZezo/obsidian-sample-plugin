@@ -1,94 +1,71 @@
-# Obsidian Sample Plugin
+# 🧩 Emote Replacer Plugin for Obsidian
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+Replace text shortcuts like `:peepoHappy:` or `:monkaS:` with custom images or GIFs in both **edit** and **preview** modes — just like 7TV/Twitch-style emotes.
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+---
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## 🚀 Features
 
-## First time developing plugins?
+- 🔁 Replaces custom keywords with images or GIFs inline
+- ⚙️ Manage emotes directly from the settings panel
+- ✨ Works in both **edit** and **preview** modes
+- 💾 Settings are saved and persist across sessions
 
-Quick starting guide for new plugin devs:
+---
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## 📦 Installation
 
-## Releasing new releases
+> **⚠️ This is a developer plugin! You'll need to enable Developer Mode in Obsidian.**
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+1. Clone or download this repo into your Obsidian vault’s `.obsidian/plugins/` directory.
+2. Run `npm install` inside the plugin folder.
+3. Build it: `npm run build`
+4. Open Obsidian, go to **Settings > Community Plugins**, and enable **Developer Mode**.
+5. Load the plugin from **Settings > Community Plugins > Reload plugins** or toggle it on.
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+---
 
-## Adding your plugin to the community plugin list
+## 🛠️ Usage
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+### 📋 Add or Edit Emotes
 
-## How to use
+1. Open **Settings > Emote Replacer**.
+2. Use the "Add Emote" button to add a new keyword and image URL.
+3. Modify existing emote URLs by editing the input fields directly.
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+### 💡 Example
 
-## Manually installing the plugin
+| Keyword         | Result                                      |
+|-----------------|---------------------------------------------|
+| `:peepoHappy:`  | ![peepoHappy](https://cdn.7tv.app/emote/01F6RC8C1G0003SBEQ3QZTEE99/1x.avif) |
+| `:monkaS:`      | ![peepoHappy](https://cdn.7tv.app/emote/01F78CHJ2G0005TDSTZFBDGMK4/1x.avif) |
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+---
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+## 🧠 How It Works
 
-## Funding URL
+- In **preview mode**, the plugin scans rendered HTML and replaces keywords with `<img>` tags.
+- In **edit mode**, it uses CodeMirror decorations to inject images inline with your text.
 
-You can include funding URLs where people who use your plugin can financially support it.
+---
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+## 📥 Roadmap / Ideas
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
-```
+- 🔍 Autocomplete for emotes while typing
+- 🌈 Inline picker for adding new emotes
+- 🔄 Sync emotes with 7TV/BTTV/FFZ APIs
+- 🧼 Remove emotes via UI
+- 🖼️ Toggle between showing/hiding emotes
 
-If you have multiple URLs, you can also do:
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+## 📃 License
 
-## API Documentation
+MIT – go wild, fork it, mod it, break it, improve it ✨
 
-See https://github.com/obsidianmd/obsidian-api
+---
+
+## 🤙 Credits
+
+Built by Erik. Inspired by Twitch/7TV-style chat overlays.
+
+---
